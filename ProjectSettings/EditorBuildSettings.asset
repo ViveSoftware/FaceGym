@@ -4,5 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/FaceGym.unity
+    guid: 146bce5ef5f13f8498054d2810596c61
+  m_configObjects:
+    com.htc.upm.wave.xrsdk.xrsettings: {fileID: 11400000, guid: 14413a7a3e1837e4cb943d87990e89f8,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: beaf2850b1317af49afb57ff31ac4c3c,
+      type: 2}
