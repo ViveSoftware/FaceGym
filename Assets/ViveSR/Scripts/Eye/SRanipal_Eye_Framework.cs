@@ -68,6 +68,7 @@ namespace ViveSR
                     if (!EnableEye) return;
                     if (Status == FrameworkStatus.WORKING || Status == FrameworkStatus.NOT_SUPPORT) return;
 
+#if UNITY_STANDALONE
                     if (EnableEyeVersion == SupportedEyeVersion.version1)
                     {
                         Error result = SRanipal_API.Initial(SRanipal_Eye.ANIPAL_TYPE_EYE, IntPtr.Zero);
@@ -114,6 +115,9 @@ namespace ViveSR
                             }
                         }
                     }
+#else
+                    Status = FrameworkStatus.WORKING;
+#endif
                 }
 
                 public void StopFramework()

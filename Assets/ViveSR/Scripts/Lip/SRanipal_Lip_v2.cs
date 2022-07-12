@@ -39,6 +39,8 @@ namespace ViveSR
                 {
                     if (Time.frameCount == LastUpdateFrame) return LastUpdateResult == Error.WORK;
                     else LastUpdateFrame = Time.frameCount;
+
+#if UNITY_STANDALONE
                     LastUpdateResult = SRanipal_Lip_API.GetLipData_v2(ref LipData);
                     if (LastUpdateResult == Error.WORK)
                     {
@@ -46,6 +48,8 @@ namespace ViveSR
                             Weightings[(LipShape_v2)i] = LipData.prediction_data.blend_shape_weight[i];
                         }
                     }
+#endif
+
                     return LastUpdateResult == Error.WORK;
                 }
 

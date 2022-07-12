@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Wave.Essence.Eye;
 
 namespace ViveSR
 {
@@ -34,6 +35,7 @@ namespace ViveSR
                 private const int NUM_OF_EYES = 2;
                 private static EyeData_v2 eyeData = new EyeData_v2();
                 private bool eye_callback_registered = false;
+
                 private void Start()
                 {
                     if (!SRanipal_Eye_Framework.Instance.EnableEye)
@@ -62,6 +64,7 @@ namespace ViveSR
 
                     if (NeededToGetData)
                     {
+#if UNITY_STANDALONE
                         if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
                         {
                             SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
@@ -124,6 +127,24 @@ namespace ViveSR
 
                         }
                         UpdateGazeRay(GazeDirectionCombinedLocal);
+#else
+                        float leftEyeOpenness = 0f;
+                        float rightEyeOpenness = 0f;
+
+                        if (EyeManager.Instance.GetLeftEyeOpenness(out leftEyeOpenness))
+                        {
+                            EyeShapeTables[0].skinnedMeshRenderer.SetBlendShapeWeight(26, (1f - leftEyeOpenness) * 100f);
+                        }
+
+                        if (EyeManager.Instance.GetRightEyeOpenness(out rightEyeOpenness))
+                        {
+                            EyeShapeTables[0].skinnedMeshRenderer.SetBlendShapeWeight(32, (1f - rightEyeOpenness) * 100f);
+                        }
+
+                        Vector3 GazeDirectionCombinedLocal = Vector3.zero;
+                        EyeManager.Instance.GetCombindedEyeDirectionNormalized(out GazeDirectionCombinedLocal);
+                        UpdateGazeRay(GazeDirectionCombinedLocal);
+#endif
                     }
                 }
                 private void Release()

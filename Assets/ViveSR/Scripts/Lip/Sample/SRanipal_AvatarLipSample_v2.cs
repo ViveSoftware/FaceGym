@@ -1,6 +1,7 @@
 ﻿//========= Copyright 2019, HTC Corporation. All rights reserved. ===========
 using System.Collections.Generic;
 using UnityEngine;
+using Wave.Essence.LipExpression;
 
 namespace ViveSR
 {
@@ -79,7 +80,12 @@ namespace ViveSR
                     {
                         int targetIndex = (int)lipShapeTable.lipShapes[i];
                         if (targetIndex > (int)LipShape_v2.Max || targetIndex < 0) continue;
+
+#if UNITY_STANDALONE
                         lipShapeTable.skinnedMeshRenderer.SetBlendShapeWeight(i, weighting[(LipShape_v2)targetIndex] * 100);
+#else
+                        lipShapeTable.skinnedMeshRenderer.SetBlendShapeWeight(i, LipExpManager.Instance.GetLipExpression((LipExp)targetIndex) * 100);
+#endif
                     }
                 }
             }

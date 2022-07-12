@@ -22,6 +22,7 @@ namespace ViveSR
                 {
                     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING) return;
 
+#if UNITY_STANDALONE
                     if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
                     {
                         SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
@@ -49,6 +50,7 @@ namespace ViveSR
                         SetMirroTransform();
                         enabled = false;
                     }
+#endif
                 }
 
                 private void Release()
@@ -59,6 +61,7 @@ namespace ViveSR
                         eye_callback_registered = false;
                     }
                 }
+
                 private void SetMirroTransform()
                 {
                     transform.position = Camera.main.transform.position + Camera.main.transform.forward * Distance;
@@ -66,6 +69,7 @@ namespace ViveSR
                     transform.LookAt(Camera.main.transform);
                     transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
                 }
+
                 private static void EyeCallback(ref EyeData_v2 eye_data)
                 {
                     eyeData = eye_data;

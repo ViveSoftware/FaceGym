@@ -5,8 +5,8 @@
 		_Color2("Color_2", Color) = (0.39, 0.09, 0.09, 1)
 		_Color3("Color_3", Color) = (0.09, 0.27, 0.09, 1)
 		_ColorHit("Color_Hit", Color) = (0.8, 0.78, 0, 1)
-		
-		[HideInInspector]_FrameWidth("FrameWidth", Int) = 1
+
+		[HideInInspector] _FrameWidth("FrameWidth", Int) = 1
 		[HideInInspector] _MeshForward("MeshForward", Vector) = (0, 0, 0, 0)
 		[HideInInspector] _MeshRight("MeshRight", Vector) = (0, 0, 0, 0)
 		[HideInInspector] _MeshCenter("MeshCenter", Vector) = (0, 0, 0, 0)
@@ -82,31 +82,34 @@
 						c.rgb = _Color1;
 					else if (bendIndex == 0)
 						c.rgb = (_BendIndex == bendIndex) ? _ColorHit : _Color2;
-					else if (bendIndex == 1)
-						c.rgb = (_BendIndex == bendIndex) ? _ColorHit : _Color3;
+					/*else if (bendIndex == 1)
+						c.rgb = (_BendIndex == bendIndex) ? _ColorHit : _Color2;*/
 					else if (bendIndex % 4 == 2)
-					{
-						if (_BendIndex >= bendIndex && _BendIndex <= bendIndex + 2 && _PieIndex == pieIndex)
-							c.rgb = _ColorHit;
-						else c.rgb = (pieIndex % 2 == 0) ? _Color1 : _Color0;
-					}
-					else if (bendIndex % 4 == 3)
 					{
 						if (_BendIndex >= bendIndex - 1 && _BendIndex <= bendIndex + 1 && _PieIndex == pieIndex)
 							c.rgb = _ColorHit;
-						else c.rgb = (pieIndex % 2 == 0) ? _Color1 : _Color0;
+						else c.rgb = (pieIndex % 2 == 0) ? _Color3 : _Color0;
+					}
+					else if (bendIndex % 4 == 3)
+					{
+						if (_BendIndex >= bendIndex - 2 && _BendIndex <= bendIndex && _PieIndex == pieIndex)
+							c.rgb = _ColorHit;
+						else c.rgb = (pieIndex % 2 == 0) ? _Color3 : _Color0;
 					}
 					else if (bendIndex % 4 == 0)
 					{
 						if (_BendIndex >= bendIndex - 2 && _BendIndex <= bendIndex && _PieIndex == pieIndex)
 							c.rgb = _ColorHit;
-						else c.rgb = (pieIndex % 2 == 0) ? _Color1 : _Color0;
+						else c.rgb = (pieIndex % 2 == 0) ? _Color3 : _Color0;
 					}
 					else if (bendIndex % 4 == 1)
 					{
-						if (_BendIndex == bendIndex && _PieIndex == pieIndex)
+						//if (_BendIndex == bendIndex && _PieIndex == pieIndex)
+						//	c.rgb = _ColorHit;
+						//else c.rgb = (pieIndex % 2 == 0) ? _Color2 : _Color3;
+						if (_BendIndex >= bendIndex && _BendIndex <= bendIndex + 2 && _PieIndex == pieIndex)
 							c.rgb = _ColorHit;
-						else c.rgb = (pieIndex % 2 == 0) ? _Color2 : _Color3;
+						else c.rgb = (pieIndex % 2 == 0) ? _Color3 : _Color0;
 					}
 				}
 

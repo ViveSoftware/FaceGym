@@ -13,8 +13,10 @@ namespace ViveSR
             {
                 public int LengthOfRay = 25;
                 [SerializeField] private LineRenderer GazeRayRenderer;
+
                 private static EyeData_v2 eyeData = new EyeData_v2();
                 private bool eye_callback_registered = false;
+
                 private void Start()
                 {
                     if (!SRanipal_Eye_Framework.Instance.EnableEye)
@@ -30,6 +32,7 @@ namespace ViveSR
                     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
                         SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
 
+#if UNITY_STANDALONE
                     if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
                     {
                         SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
@@ -61,7 +64,9 @@ namespace ViveSR
                     Vector3 GazeDirectionCombined = Camera.main.transform.TransformDirection(GazeDirectionCombinedLocal);
                     GazeRayRenderer.SetPosition(0, Camera.main.transform.position - Camera.main.transform.up * 0.05f);
                     GazeRayRenderer.SetPosition(1, Camera.main.transform.position + GazeDirectionCombined * LengthOfRay);
+#endif
                 }
+
                 private void Release()
                 {
                     if (eye_callback_registered == true)
@@ -70,6 +75,7 @@ namespace ViveSR
                         eye_callback_registered = false;
                     }
                 }
+
                 private static void EyeCallback(ref EyeData_v2 eye_data)
                 {
                     eyeData = eye_data;

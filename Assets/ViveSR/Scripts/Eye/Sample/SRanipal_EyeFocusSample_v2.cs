@@ -1,12 +1,17 @@
 ﻿//========= Copyright 2018, HTC Corporation. All rights reserved. ===========
+using HTC.UnityPlugin.Pointer3D;
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ViveSR.anipal.Eye
 {
     public class SRanipal_EyeFocusSample_v2 : MonoBehaviour
     {
+        [SerializeField]
+        private Pointer3DRaycaster raycaster;
+
         private FocusInfo FocusInfo;
         private readonly float MaxDistance = 20;
         private readonly GazeIndex[] GazePriority = new GazeIndex[] { GazeIndex.COMBINE, GazeIndex.LEFT, GazeIndex.RIGHT };
@@ -26,6 +31,7 @@ namespace ViveSR.anipal.Eye
             if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
                 SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
 
+#if UNITY_STANDALONE
             if (SRanipal_Eye_Framework.Instance.EnableEyeDataCallback == true && eye_callback_registered == false)
             {
                 SRanipal_Eye_v2.WrapperRegisterEyeDataCallback(Marshal.GetFunctionPointerForDelegate((SRanipal_Eye_v2.CallbackBasic)EyeCallback));
@@ -54,6 +60,14 @@ namespace ViveSR.anipal.Eye
                     break;
                 }
             }
+#else
+            RaycastResult r = raycaster.FirstRaycastResult();
+            if (r.gameObject != null)
+            {
+                DartBoard dartBoard = r.gameObject.GetComponent<DartBoard>();
+                if (dartBoard != null) dartBoard.Focus(r.worldPosition);
+            }
+#endif
         }
         private void Release()
         {

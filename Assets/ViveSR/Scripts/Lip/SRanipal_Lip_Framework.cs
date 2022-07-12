@@ -62,6 +62,7 @@ namespace ViveSR
                     if (Status == FrameworkStatus.WORKING) return;
                     Status = FrameworkStatus.START;
 
+#if UNITY_STANDALONE
                     if (EnableLipVersion == SupportedLipVersion.version1)
                     {
                         Error result = SRanipal_API.Initial(SRanipal_Lip.ANIPAL_TYPE_LIP, IntPtr.Zero);
@@ -90,6 +91,9 @@ namespace ViveSR
                             Status = FrameworkStatus.ERROR;
                         }
                     }
+#else
+                    Status = FrameworkStatus.WORKING;
+#endif
                 }
 
                 public void StopFramework()
