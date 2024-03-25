@@ -11,16 +11,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Wave.Native;
-using Wave.Essence.Hand;
 using Wave.Essence.Hand.StaticGesture;
 
-namespace Wave.Essence.Interaction.Mode.Demo
+namespace Wave.Essence.Hand.Model.Demo
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Text))]
 	sealed class StaticGestureText : MonoBehaviour
 	{
-		const string LOG_TAG = "Wave.Essence.Interaction.Mode.Demo.StaticGestureText";
+		const string LOG_TAG = "Wave.Essence.Hand.Model.Demo.StaticGestureText";
 		private void DEBUG(string msg)
 		{
 			if (Log.EnableDebugLog)
@@ -45,11 +44,11 @@ namespace Wave.Essence.Interaction.Mode.Demo
 
 			string gesture = WXRGestureHand.GetSingleHandGesture(m_Hand == HandManager.HandType.Left ? true : false);
 			HandState hs = WXRGestureHand.GetState(m_Hand == HandManager.HandType.Left ? true : false);
+			HandManager.Instance.GetHandPoseTimestamp(out long timestamp);
 
-			m_Text.text = m_Hand + " Gesture: " + gesture +
-				(hs != null ?
-					("\n" + hs.thumb + ", " + hs.index + ", " + hs.middle + ", " + hs.ring + ", " + hs.pinky) : ""
-				);
+			m_Text.text = m_Hand + " Gesture: " + gesture + " " + timestamp
+				+ (hs != null ?
+					("\n" + hs.thumb + ", " + hs.index + ", " + hs.middle + ", " + hs.ring + ", " + hs.pinky) : "");
 		}
 		#endregion
 

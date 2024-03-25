@@ -9,27 +9,17 @@
 // specifications, and documentation provided by HTC to You."
 
 using UnityEngine;
-using UnityEngine.UI;
-using Wave.Essence.Hand.StaticGesture;
 
 namespace Wave.Essence.Hand.Model.Demo
 {
-	[DisallowMultipleComponent]
-	[RequireComponent(typeof(Text))]
-	sealed class StaticDualHandGestureText : MonoBehaviour
+	public class RestartHand : MonoBehaviour
 	{
-		private Text m_Text = null;
-
-		void Start()
+		public HandManager.TrackerType Hand = HandManager.TrackerType.Natural;
+		public void RestartHandTracking()
 		{
-			m_Text = gameObject.GetComponent<Text>();
-		}
-
-		void Update()
-		{
-			if (m_Text == null) { return; }
-
-			m_Text.text = "Dual Hand Gesture: " + WXRGestureHand.GetDualHandGesture();
+			if (HandManager.Instance == null) { return; }
+			Native.Log.d("Wave.Essence.Hand.Model.Demo.RestartHand", "RestartHand()", true);
+			HandManager.Instance.RestartHandTracker(Hand);
 		}
 	}
 }

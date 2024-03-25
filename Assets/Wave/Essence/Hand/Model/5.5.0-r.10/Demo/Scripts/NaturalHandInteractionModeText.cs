@@ -10,26 +10,23 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using Wave.Essence.Hand.StaticGesture;
 
 namespace Wave.Essence.Hand.Model.Demo
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Text))]
-	sealed class StaticDualHandGestureText : MonoBehaviour
+	public class NaturalHandInteractionModeText : MonoBehaviour
 	{
 		private Text m_Text = null;
-
-		void Start()
+		void Awake()
 		{
-			m_Text = gameObject.GetComponent<Text>();
+			m_Text = GetComponent<Text>();
 		}
 
-		void Update()
+		private void Update()
 		{
-			if (m_Text == null) { return; }
-
-			m_Text.text = "Dual Hand Gesture: " + WXRGestureHand.GetDualHandGesture();
+			if (m_Text != null)
+				m_Text.text = "Interaction Mode: " + ClientInterface.InteractionMode;
 		}
 	}
 }

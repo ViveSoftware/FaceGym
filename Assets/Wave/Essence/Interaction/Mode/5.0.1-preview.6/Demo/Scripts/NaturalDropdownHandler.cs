@@ -10,38 +10,43 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Wave.Native;
-using Wave.Essence.Hand;
+using Wave.Essence.Raycast;
 
-namespace Wave.Essence.Interaction.Mode.Demo
+namespace Wave.Essence.Hand.Model.Demo
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Dropdown))]
 	sealed class NaturalDropdownHandler : MonoBehaviour
 	{
-		const string LOG_TAG = "Wave.Essence.Interaction.Demo.NaturalDropdownHandler";
+		const string LOG_TAG = "Wave.Essence.Hand.Model.Demo.NaturalDropdownHandler";
 		void DEBUG(string msg)
 		{
 			if (Log.EnableDebugLog)
 				Log.d(LOG_TAG, msg, true);
 		}
 
-		private NaturalHandInputModule inputModule = null;
+		[SerializeField]
+		private HandRaycastPointer m_RaycastPointerL = null;
+		public HandRaycastPointer RaycastPointerL { get { return m_RaycastPointerL; } set { m_RaycastPointerL = value; } }
+
+		[SerializeField]
+		private HandRaycastPointer m_RaycastPointerR = null;
+		public HandRaycastPointer RaycastPointerR { get { return m_RaycastPointerR; } set { m_RaycastPointerR = value; } }
+
+
 		void UpdatePinchStrength(int dropdownValue)
 		{
-			if (inputModule == null) { return; }
+			if (m_RaycastPointerL == null || m_RaycastPointerR == null) { return; }
 			if (dropdownValue < 0 || dropdownValue > 8)
 			{
-				inputModule.PinchOnThreshold = 0.7f;
-				inputModule.PinchOffThreshold = 0.7f;
+				m_RaycastPointerR.PinchStrength = m_RaycastPointerL.PinchStrength = 0.7f;
 			}
 			else
 			{
 				float f = Convert.ToSingle(dropdownValue);
-				inputModule.PinchOnThreshold = (f + 1) / 10;
-				inputModule.PinchOffThreshold = (f + 1) / 10;
+				m_RaycastPointerR.PinchStrength = m_RaycastPointerL.PinchStrength = (f + 1) / 10;
 			}
 		}
 
@@ -75,24 +80,18 @@ namespace Wave.Essence.Interaction.Mode.Demo
 				m_DropDown.options.Add(new Dropdown.OptionData() { text = c });
 			}
 
-			inputModule = EventSystem.current.gameObject.GetComponent<NaturalHandInputModule>();
-			if (inputModule == null)
+			if (m_RaycastPointerL == null || m_RaycastPointerR == null)
 			{
 				m_DropDown.value = 6; // 0.7
 			}
 			else
 			{
-				m_DropDown.value = (int)(Mathf.Round(inputModule.PinchOnThreshold * 10)) - 1;
+				m_DropDown.value = (int)(Mathf.Round(m_RaycastPointerL.PinchStrength * 10)) - 1;
 			}
 		}
 		void Update()
 		{
-			if (inputModule == null)
-			{
-				inputModule = EventSystem.current.gameObject.GetComponent<NaturalHandInputModule>();
-			}
-			if (m_DropDownText == null)
-				return;
+			if (m_DropDownText == null || m_RaycastPointerL == null || m_RaycastPointerR == null) { return; }
 
 			m_DropDownText.text = textStrings[m_DropDown.value];
 

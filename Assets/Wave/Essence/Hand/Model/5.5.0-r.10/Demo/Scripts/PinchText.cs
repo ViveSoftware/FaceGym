@@ -10,26 +10,33 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using Wave.Essence.Hand.StaticGesture;
+using Wave.Native;
 
 namespace Wave.Essence.Hand.Model.Demo
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Text))]
-	sealed class StaticDualHandGestureText : MonoBehaviour
+	public class PinchText : MonoBehaviour
 	{
+		public bool isLeft = false;
 		private Text m_Text = null;
 
-		void Start()
+		private void Awake()
 		{
-			m_Text = gameObject.GetComponent<Text>();
+			m_Text = GetComponent<Text>();
 		}
 
+		private Vector3 origin = Vector3.zero, direction = Vector3.zero;
 		void Update()
 		{
 			if (m_Text == null) { return; }
 
-			m_Text.text = "Dual Hand Gesture: " + WXRGestureHand.GetDualHandGesture();
+			HandManager.Instance.GetPinchOrigin(ref origin, isLeft);
+			HandManager.Instance.GetPinchDirection(ref direction, isLeft);
+
+			m_Text.text = (isLeft ? "Left Pinch: " : "Right Pinch: ");
+			m_Text.text += "\nOrigin( " + origin.x.ToString() + ", " + origin.y.ToString() + ", " + origin.z.ToString() + ")";
+			m_Text.text += "\nDirection( " + direction.x.ToString() + ", " + direction.y.ToString() + ", " + direction.z.ToString() + ")";
 		}
 	}
 }

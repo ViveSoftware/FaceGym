@@ -10,26 +10,27 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using Wave.Essence.Hand.StaticGesture;
+using Wave.Native;
+using Wave.Essence.Hand;
 
-namespace Wave.Essence.Hand.Model.Demo
+namespace Wave.Essence.InputModule.Demo
 {
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Text))]
-	sealed class StaticDualHandGestureText : MonoBehaviour
+	public class GestureText : MonoBehaviour
 	{
-		private Text m_Text = null;
+		public bool IsLeft = false;
 
-		void Start()
+		Text m_Text = null;
+		private void Awake()
 		{
-			m_Text = gameObject.GetComponent<Text>();
+			m_Text = GetComponent<Text>();
 		}
-
-		void Update()
+		private void Update()
 		{
-			if (m_Text == null) { return; }
+			if (m_Text == null || HandManager.Instance == null) { return; }
 
-			m_Text.text = "Dual Hand Gesture: " + WXRGestureHand.GetDualHandGesture();
+			m_Text.text = (IsLeft ? "Left Gesture: " : "Right Gesture: ") + HandManager.Instance.GetHandGesture(IsLeft);
 		}
 	}
 }
